@@ -99,13 +99,13 @@
 <script>
   const preguntas = [
     {
-      texto: "¿Cuál describe mejor cómo tomas decisiones importantes?",
+      texto: "Te encuentras con una situación injusta que no te afecta directamente. ¿Qué haces?",
       opciones: {
-        A: "Confío en mi fuerza y perseverancia",
-        B: "Pienso en los efectos antes de actuar",
-        C: "Me adapto y manipulo la situación",
-        D: "Me gusta cambiar y transformar lo que hago",
-        E: "Hago lo que nadie más puede hacer"
+        A: "Actúo inmediatamente, no soporto la injusticia.",
+        B: "Evalúo si es útil involucrarme y qué consecuencias tendría.",
+        C: "Me siento incómodo, pero prefiero no intervenir.",
+        D: "Pienso en una forma creativa o simbólica de protestar.",
+        E: "A veces ignoro, a veces actúo sin saber por qué."
       }
     },
     {
@@ -328,6 +328,16 @@
         E: "Haría algo único y secreto"
       }
     }
+   {
+      texto: "¿Qué harías si nadie te estuviera mirando?",
+      opciones: {
+        A: "Seguiría fortaleciendo mi cuerpo",
+        B: "Practicaría control de energía",
+        C: "Experimentaría con influencias",
+        D: "Crearía y probaría nuevas ideas",
+        E: "Haría algo único y secreto"
+      }
+    }
   ];
 
   const tipos = {
@@ -387,3 +397,134 @@
 
 </body>
 </html>
+import { useState } from "react";
+
+const questions = [
+  {
+    question: "Te encuentras con una situación injusta que no te afecta directamente. ¿Qué haces?",
+    options: [
+      { text: "Actúo inmediatamente, no soporto la injusticia.", type: "Refuerzo" },
+      { text: "Evalúo si es útil involucrarme y qué consecuencias tendría.", type: "Manipulación" },
+      { text: "Me siento incómodo, pero prefiero no intervenir.", type: "Emisión" },
+      { text: "Pienso en una forma creativa o simbólica de protestar.", type: "Transformación" },
+      { text: "Depende: a veces ignoro, a veces actúo sin saber por qué.", type: "Especialización" },
+    ],
+  },
+  // (Agrega aquí las otras 23 preguntas de forma similar, manteniendo opciones con su tipo de Nen)
+];
+
+const typeColors = {
+  Refuerzo: "bg-red-500",
+  Emisión: "bg-blue-500",
+  Transformación: "bg-yellow-500",
+  Manipulación: "bg-green-500",
+  Materialización: "bg-purple-500",
+  Especialización: "bg-pink-500",
+};
+
+const compatibility = {
+  Refuerzo: ["Emisión", "Transformación"],
+  Emisión: ["Refuerzo", "Manipulación"],
+  Transformación: ["Refuerzo", "Materialización"],
+  Manipulación: ["Emisión", "Especialización"],
+  Materialización: ["Transformación", "Especialización"],
+  Especialización: ["Materialización", "Manipulación"],
+};
+
+export default function Home() {
+  const [answers, setAnswers] = useState(Array(questions.length).fill(null));
+  const [result, setResult] = useState(null);
+
+  const handleAnswer = (qIndex, optionIndex) => {
+    const newAnswers = [...answers];
+    newAnswers[qIndex] = optionIndex;
+    setAnswers(newAnswers);
+  };
+
+  const calculateNen = () => {
+    const counts = {
+      Refuerzo: 0,
+      Emisión: 0,
+      Transformación: 0,
+      Manipulación: 0,
+      Materialización: 0,
+      Especialización: 0,
+    };
+
+    answers.forEach((optionIndex, i) => {
+      if (optionIndex !== null) {
+        const type = questions[i].options[optionIndex].type;
+        counts[type] += 1;
+      }
+    });
+
+    const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+    const [primary, secondaryCandidate] = sorted;
+
+    const secondary = compatibility[primary[0]].includes(secondaryCandidate[0])
+      ? secondaryCandidate[0]
+      : null;
+
+    setResult({ primary: primary[0], secondary });
+  };
+
+  return (
+    <main className="p-4 max-w-3xl mx-auto text-white">
+      <h1 className="text-3xl font-bold mb-6 text-center">Test de Nen</h1>
+
+      {result ? (
+        <div className="space-y-4 text-center">
+          <h2 className={`text-2xl font-bold ${typeColors[result.primary]}`}>Tipo Primario: {result.primary}</h2>
+          {result.secondary && (
+            <h3 className={`text-xl ${typeColors[result.secondary]}`}>Tipo Secundario: {result.secondary}</h3>
+          )}
+          <button
+            className="bg-gray-700 px-4 py-2 rounded mt-4"
+            onClick={() => {
+              setAnswers(Array(questions.length).fill(null));
+              setResult(null);
+            }}
+          >
+            Volver a intentar
+          </button>
+        </div>
+      ) : (
+        <form
+          className="space-y-6"
+          onSubmit={(e) => {
+            e.preventDefault();
+            calculateNen();
+          }}
+        >
+          {questions.map((q, i) => {
+            const randomized = [...q.options].sort(() => Math.random() - 0.5);
+            return (
+              <div key={i} className="bg-gray-800 p-4 rounded shadow">
+                <p className="mb-2 font-medium">{i + 1}. {q.question}</p>
+                {randomized.map((opt, j) => (
+                  <label key={j} className="block mb-1">
+                    <input
+                      type="radio"
+                      name={`q${i}`}
+                      onChange={() => handleAnswer(i, q.options.indexOf(opt))}
+                      checked={answers[i] === q.options.indexOf(opt)}
+                      className="mr-2"
+                    />
+                    {opt.text}
+                  </label>
+                ))}
+              </div>
+            );
+          })}
+          <button
+            type="submit"
+            disabled={answers.includes(null)}
+            className="bg-blue-600 px-6 py-2 rounded disabled:opacity-50"
+          >
+            Ver resultados
+          </button>
+        </form>
+      )}
+    </main>
+  );
+}
