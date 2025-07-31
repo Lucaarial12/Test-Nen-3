@@ -10,3 +10,380 @@
   <p>Pronto podrás saber cuál es tu tipo de Nen...</p>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Test de Nen - Hunter x Hunter</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #121212;
+      color: #eee;
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem 2rem;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .question {
+      margin-bottom: 1.5rem;
+    }
+    .question p {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    label {
+      display: block;
+      margin-left: 1.5rem;
+      cursor: pointer;
+      margin-bottom: 0.3rem;
+    }
+    input[type="radio"] {
+      margin-right: 0.5rem;
+    }
+    #submit-btn {
+      display: block;
+      margin: 2rem auto;
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+      cursor: pointer;
+      border: none;
+      border-radius: 6px;
+      background-color: #5a7;
+      color: #121212;
+      font-weight: 700;
+      transition: background-color 0.3s;
+    }
+    #submit-btn:hover {
+      background-color: #487;
+    }
+    #result {
+      margin-top: 2rem;
+      background-color: #222;
+      padding: 1.5rem;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 1.2rem;
+    }
+    footer {
+      margin-top: 3rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #888;
+    }
+    footer a {
+      color: #6a9;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Test de Nen - Hunter x Hunter</h1>
+
+<form id="test-form"></form>
+
+<button id="submit-btn">Enviar respuestas</button>
+
+<div id="result"></div>
+
+<footer>
+  Creado por <a href="https://www.instagram.com/luca_arial12?igsh=MTkwcTB3cXdhZjEzMw==" target="_blank" rel="noopener noreferrer">@Luca_arial12</a>
+</footer>
+
+<script>
+  const preguntas = [
+    {
+      texto: "¿Cuál describe mejor cómo tomas decisiones importantes?",
+      opciones: {
+        A: "Confío en mi fuerza y perseverancia",
+        B: "Pienso en los efectos antes de actuar",
+        C: "Me adapto y manipulo la situación",
+        D: "Me gusta cambiar y transformar lo que hago",
+        E: "Hago lo que nadie más puede hacer"
+      }
+    },
+    {
+      texto: "¿Qué valoras más en ti mismo?",
+      opciones: {
+        A: "Mi determinación y resistencia",
+        B: "Mi capacidad para emitir energía",
+        C: "Mi habilidad para influir en otros",
+        D: "Mi creatividad y originalidad",
+        E: "Mi rareza y especialidad única"
+      }
+    },
+    {
+      texto: "En un grupo, ¿qué papel sueles tomar?",
+      opciones: {
+        A: "El que apoya con fuerza física",
+        B: "El que lidera con energía y control",
+        C: "El que manipula a los demás para su beneficio",
+        D: "El que aporta ideas nuevas y transformadoras",
+        E: "El que sigue su propio camino sin importar reglas"
+      }
+    },
+    {
+      texto: "Cuando te enfrentas a un problema, ¿qué haces primero?",
+      opciones: {
+        A: "Uso mi poder y resistencia para superarlo",
+        B: "Analizo y emito energía para controlarlo",
+        C: "Manipulo variables para cambiar la situación",
+        D: "Transformo mi enfoque para adaptarme",
+        E: "Busco una solución única y poco común"
+      }
+    },
+    {
+      texto: "¿Cómo te describirías en tus emociones?",
+      opciones: {
+        A: "Intenso y persistente",
+        B: "Controlado y expresivo",
+        C: "Variable y estratégico",
+        D: "Flexible y creativo",
+        E: "Inusual y difícil de entender"
+      }
+    },
+    {
+      texto: "¿Cuál es tu manera preferida de aprender?",
+      opciones: {
+        A: "Practicando y reforzando habilidades",
+        B: "Observando y aplicando energía",
+        C: "Interactuando y manipulando el entorno",
+        D: "Explorando y transformando ideas",
+        E: "Experimentando cosas nuevas y únicas"
+      }
+    },
+    {
+      texto: "¿Qué te motiva más en la vida?",
+      opciones: {
+        A: "Superar mis límites físicos",
+        B: "Controlar y dirigir energías",
+        C: "Influir en los demás a mi manera",
+        D: "Cambiar y crear algo nuevo",
+        E: "Ser único y especial"
+      }
+    },
+    {
+      texto: "¿Cómo te relacionas con las personas?",
+      opciones: {
+        A: "Con fuerza y apoyo constante",
+        B: "Con energía y liderazgo",
+        C: "Con estrategia y persuasión",
+        D: "Con innovación y flexibilidad",
+        E: "Con misterio y originalidad"
+      }
+    },
+    {
+      texto: "¿Qué tipo de actividades disfrutas más?",
+      opciones: {
+        A: "Ejercicio físico y desafíos",
+        B: "Competencias que requieren energía",
+        C: "Juegos mentales y manipulación",
+        D: "Crear y cambiar cosas a tu manera",
+        E: "Actividades únicas y poco comunes"
+      }
+    },
+    {
+      texto: "¿Cómo describirías tu estilo de comunicación?",
+      opciones: {
+        A: "Directo y fuerte",
+        B: "Claro y energético",
+        C: "Sutil y estratégico",
+        D: "Creativo y variable",
+        E: "Misterioso y poco convencional"
+      }
+    },
+    {
+      texto: "¿Cuál es tu reacción ante la rutina?",
+      opciones: {
+        A: "Prefiero seguir un camino fuerte y constante",
+        B: "Me adapto con energía para mejorarla",
+        C: "Busco maneras de cambiarla a mi favor",
+        D: "Transformo la rutina con creatividad",
+        E: "Me aburro y busco romperla con lo inesperado"
+      }
+    },
+    {
+      texto: "¿Qué prefieres al tomar riesgos?",
+      opciones: {
+        A: "Confianza en mis habilidades físicas",
+        B: "Controlar la situación con energía",
+        C: "Manipular las variables para minimizar riesgos",
+        D: "Transformar el riesgo en oportunidad",
+        E: "Arriesgarme en cosas únicas y especiales"
+      }
+    },
+    {
+      texto: "¿Cómo te describen tus amigos?",
+      opciones: {
+        A: "Fuerte y confiable",
+        B: "Energético y líder",
+        C: "Inteligente y persuasivo",
+        D: "Creativo y original",
+        E: "Único y misterioso"
+      }
+    },
+    {
+      texto: "¿Qué te gustaría lograr en la vida?",
+      opciones: {
+        A: "Ser reconocido por mi fuerza",
+        B: "Dominar el control de la energía",
+        C: "Ser un maestro en influir a otros",
+        D: "Crear cosas nuevas y originales",
+        E: "Ser alguien que nadie puede imitar"
+      }
+    },
+    {
+      texto: "¿Cómo enfrentas la adversidad?",
+      opciones: {
+        A: "Con fuerza y perseverancia",
+        B: "Con control y análisis",
+        C: "Con estrategia y manipulación",
+        D: "Con adaptación y cambio",
+        E: "Con singularidad y resistencia"
+      }
+    },
+    {
+      texto: "¿Qué tipo de persona eres en general?",
+      opciones: {
+        A: "Práctico y fuerte",
+        B: "Energético y analítico",
+        C: "Astuto y persuasivo",
+        D: "Creativo y adaptable",
+        E: "Especial y único"
+      }
+    },
+    {
+      texto: "¿Qué es lo que más valoras en un equipo?",
+      opciones: {
+        A: "La fuerza y resistencia",
+        B: "La energía y liderazgo",
+        C: "La inteligencia y manipulación",
+        D: "La creatividad y flexibilidad",
+        E: "La originalidad y diversidad"
+      }
+    },
+    {
+      texto: "¿Qué prefieres en un conflicto?",
+      opciones: {
+        A: "Enfrentar directamente con fuerza",
+        B: "Controlar con energía",
+        C: "Manipular para ganar sin pelear",
+        D: "Cambiar las reglas del juego",
+        E: "Buscar soluciones únicas"
+      }
+    },
+    {
+      texto: "¿Cómo tomas decisiones rápidas?",
+      opciones: {
+        A: "Con fuerza y determinación",
+        B: "Con control y rapidez",
+        C: "Con estrategia e intuición",
+        D: "Con creatividad y flexibilidad",
+        E: "Con instinto único"
+      }
+    },
+    {
+      texto: "¿Qué te inspira más en la vida?",
+      opciones: {
+        A: "El poder y la superación",
+        B: "La energía y el control",
+        C: "La influencia y el cambio",
+        D: "La creatividad y transformación",
+        E: "La singularidad y misterio"
+      }
+    },
+    {
+      texto: "¿Qué tipo de retos buscas?",
+      opciones: {
+        A: "Físicos y de resistencia",
+        B: "De control y energía",
+        C: "Mentales y estratégicos",
+        D: "De innovación y cambio",
+        E: "Únicos y poco convencionales"
+      }
+    },
+    {
+      texto: "¿Cómo defines tu estilo personal?",
+      opciones: {
+        A: "Fuerte y decidido",
+        B: "Dinámico y controlado",
+        C: "Sutil y manipulador",
+        D: "Creativo y adaptable",
+        E: "Único y especial"
+      }
+    },
+    {
+      texto: "¿Qué harías si nadie te estuviera mirando?",
+      opciones: {
+        A: "Seguiría fortaleciendo mi cuerpo",
+        B: "Practicaría control de energía",
+        C: "Experimentaría con influencias",
+        D: "Crearía y probaría nuevas ideas",
+        E: "Haría algo único y secreto"
+      }
+    }
+  ];
+
+  const tipos = {
+    A: "Refuerzo",
+    B: "Emisión",
+    C: "Manipulación",
+    D: "Transmutación",
+    E: "Especialista"
+  };
+
+  const form = document.getElementById('test-form');
+  const resultDiv = document.getElementById('result');
+
+  // Crear las preguntas en el formulario
+  preguntas.forEach((pregunta, i) => {
+    const div = document.createElement('div');
+    div.className = 'question';
+    div.innerHTML = `<p>${i + 1}. ${pregunta.texto}</p>`;
+
+    for (const letra in pregunta.opciones) {
+      const option = pregunta.opciones[letra];
+      const label = document.createElement('label');
+
+      label.innerHTML = `
+        <input type="radio" name="q${i}" value="${letra}" required />
+        ${letra}: ${option}
+      `;
+      div.appendChild(label);
+    }
+
+    form.appendChild(div);
+  });
+
+  document.getElementById('submit-btn').addEventListener('click', (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const counts = { A: 0, B: 0, C: 0, D: 0, E: 0 };
+
+    for (const [name, value] of formData.entries()) {
+      counts[value]++;
+    }
+
+    // Ordenar por mayor cantidad
+    const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+    const principal = sorted[0][0];
+    const secundario = sorted[1] ? sorted[1][0] : null;
+
+    let html = `<h3>Tu tipo principal de Nen es: <strong>${tipos[principal]}</strong></h3>`;
+    if (secundario) {
+      html += `<p>Tu tipo secundario es: <strong>${tipos[secundario]}</strong></p>`;
+    }
+
+    resultDiv.innerHTML = html;
+    window.scrollTo({ top: resultDiv.offsetTop, behavior: 'smooth' });
+  });
+</script>
+
+</body>
+</html>
